@@ -15,3 +15,6 @@ Hardware
 	
 	
 This library does not support reading data from DYNAMIXELS at this time - coming soon.
+
+Based on ArbotiX libraries.
+https://github.com/interbotix/arbotix
