@@ -24,6 +24,7 @@
 
 #define AX12_MAX_SERVOS             30
 #define AX12_BUFFER_SIZE            32
+#define ARBOTIX
 
 /** Configuration **/
 #if defined(ARBOTIX)

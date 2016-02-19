@@ -10,11 +10,11 @@ Usage - File -> Examples -> BioloidUno -> AXSimpleTestUno
 	Change the ID of a servo (only plug one servo in at a time
 	
 Hardware
-	Connect the VDD/GND pins to 12v and the GND to your Arduino GND pin. Connect the data pin to your Arduino's TX pin
+	Connect the VDD/GND pins to 12v and the GND to your Arduino GND pin. Connect your Arduino's RX and TX pin together, then connect them both to the DYAMIXEL data pin.
 	http://support.robotis.com/en/images/product/dynamixel/ax_series/ax_series_pin.png
 	
 	
-This library does not support reading data from DYNAMIXELS at this time - coming soon.
+
 
 Based on ArbotiX libraries.
 https://github.com/interbotix/arbotix

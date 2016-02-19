@@ -18,6 +18,7 @@
 */
 
 #include "ax12Uno.h"
+#define ARBOTIX
 
 /******************************************************************************
  * Hardware Serial Level, this uses the same stuff as Serial1, therefore 
@@ -55,32 +56,14 @@ void setTX(int id){
     ax_tx_Pointer = 0;
 }
 void setRX(int id){ 
-  #if defined(AX_RX_SWITCHED)
-    int i;
-    // Need to wait for last byte to be sent before turning the bus around.
-    // Check the Transmit complete flag
-    while (bit_is_clear(UCSR0A, UDRE0));
-    for(i=0; i<UBRR0L*15; i++)    
-        asm("nop");
-    if(dynamixel_bus_config[id-1] > 0)
-        SET_RX_RD;
-    else
-        SET_AX_RD;
-  #else
-    // emulate half-duplex on ArbotiX, ArbotiX w/ RX Bridge
-    #ifdef ARBOTIX_WITH_RX
-      int i;
-      // Need to wait for last byte to be sent before turning the bus around.
-      // Check the Transmit complete flag
-      while (bit_is_clear(UCSR0A, UDRE0));
-      for(i=0; i<25; i++)    
-          asm("nop");
-      PORTD &= 0xEF;
-    #endif 
-    bitClear(UCSR0B, TXEN0);
-    bitSet(UCSR0B, RXCIE0);
-  #endif  
-    bitSet(UCSR0B, RXEN0);
+
+   // delay(2);
+   // UCSR0B = 1<<RXCIE0 | 0 <<TXCIE0 | 0<<UDRIE0 | 1 << RXEN0 | 0<TXEN0 | 0<<UCSZ02 | 0<<TXB80;
+
+
+     bitClear(UCSR0B, TXEN0);
+     bitSet(UCSR0B, RXCIE0);
+     bitSet(UCSR0B, RXEN0);
     ax_rx_int_Pointer = 0;
     ax_rx_Pointer = 0;
 }
@@ -113,7 +96,7 @@ void ax12writeB(unsigned char data){
 }
 /** We have a one-way recieve buffer, which is reset after each packet is receieved.
     A wrap-around buffer does not appear to be fast enough to catch all bytes at 1Mbps. */
-ISR(USART1_RX_vect){
+ISR(USART_RX_vect){
     ax_rx_int_buffer[(ax_rx_int_Pointer++)] = UDR0;
 }
 
@@ -201,6 +184,7 @@ int ax12GetRegister(int id, int regstart, int length){
     ax12writeB(length);
     ax12writeB(checksum);  
     setRX(id);    
+
     if(ax12ReadPacket(length + 6) > 0){
         ax12Error = ax_rx_buffer[4];
         if(length == 1)
@@ -248,4 +232,3 @@ void ax12SetRegister2(int id, int regstart, int data){
 
 // general write?
 // general sync write?
-
