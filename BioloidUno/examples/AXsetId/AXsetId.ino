@@ -8,6 +8,7 @@ int servoPosition;
 
 void setup()
 {
+  ax12Init(1000000); //re - intiialize at 1mbps for testing
   delay(10);
   ax12SetRegister(OLD_SERVO_ID, AX_ID, NEW_SERVO_ID); //set old servo id to new servo id
   delay(10);
